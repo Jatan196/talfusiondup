@@ -8,7 +8,7 @@ console.log("hi");
 export const isAuthenticated = async(req,res,next)=>{
     try{
         const token=req.cookies.token;
-        console.log(token);
+     //   console.log(token);
      
         if(!token){ // token not generated yet
             return res.status(401).json({message:"User is not Authenticated"});
