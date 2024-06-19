@@ -26,4 +26,4 @@ const
     }
 
 },{timestamps:true});
-export const User = mongoose.model("User",userModel);
+export const User = mongoose.model("User",userModel); // it is the collection / table named User with above specieed schema
