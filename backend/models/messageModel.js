@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const messageModel = new mongoose.Schema({
     senderId:{
         type:mongoose.Schema.Types.ObjectId, // it is like the primary key of RDBMS , we will requerst user model to give id to that user
@@ -7,10 +8,10 @@ const messageModel = new mongoose.Schema({
         ref:"User",
         required:true
     },
-    receiverId:{
+    conversationId:{
         type:mongoose.Schema.Types.ObjectId, // it is like the primary key of RDBMS , we will requerst user model to give id to that user
-
-        ref:"User",
+    
+        ref:"Conversation",
         required:true
     },
     message:{

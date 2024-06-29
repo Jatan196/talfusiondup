@@ -4,6 +4,7 @@
  import cookieParser from "cookie-parser";
  import userRoute from "./routes/userRoute.js";
  import messageRoute from "./routes/messageRoute.js"
+ import conversationRoute from "./routes/convoRoutes.js";
  import cors from "cors"; //* for api
  import {app,server} from "./socket/socket.js"
  dotenv.config({});
@@ -24,6 +25,7 @@ app.use(cors(coresOption));//* for api
 // routes
 app.use("/api/v1/user",userRoute);
 app.use("/api/v1/message",messageRoute);
+app.use("/api/v1/conversation",conversationRoute);
 // api link will form like --> 
 // http://localhost:8080/api/v1/user/register , this register will add from userRoute that we have passed
 

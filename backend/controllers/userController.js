@@ -2,6 +2,7 @@
 import {User} from "../models/userModel.js"
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { Conversation } from "../models/conversationModel.js";
 
 
 export const register = async(req,res)=>{
@@ -116,17 +117,48 @@ export const logout= async(req,res)=>{
         console.log(error);
     }
  }
+ 
 export const getOtherUsers= async(req,res)=>{
    try{
      // we'll user except the loggedin one
-        const loggedInUserId= req.id; // which is stred in isAuthenticated method
+     const loggedInUserId = req.id; // which is stored in isAuthenticated method
+        console.log("hi");
+     // Find all users except the logged-in user
+     const otherUsers = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
 
-        const otherUsers= await User.find({_id:{$ne:loggedInUserId}}).select("-password"); 
-        // command of mongo db , $ne is !operator 
+     // Create an array of promises for finding conversations
+     const convoPromises = otherUsers.map(async (otherUser) => {
+         const convo = await Conversation.findOne({
+             participants: {
+                 $all: [
+                    loggedInUserId,
+                    otherUser._id
+                 ],
+                 $size: 2
+             }
+         }).select('_id'); // Select only the _id field
 
-        return res.status(200).json(otherUsers);
-   }
-   catch{
-    console.log(error);
-   }
+         return {
+             userId: otherUser._id,
+             convoId: convo ? convo._id : null
+         };
+     });
+
+     // Wait for all promises to resolve
+     const convoMappings = await Promise.all(convoPromises);
+
+     // Prepare the response object
+     const response = {
+         otherUsers: otherUsers,
+         convoMappings: convoMappings.reduce((acc, mapping) => { // conversion from array of pairs to single json mapping object
+             acc[mapping.userId] = mapping.convoId;
+             return acc;
+         },{})
+     };
+
+     return res.status(200).json(response);
+ } catch (error) {
+     console.error(error);
+     return res.status(500).json({ error: 'Internal Server Error' });
+ }
 };

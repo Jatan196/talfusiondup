@@ -5,7 +5,7 @@ import express from "express";
 
 const app = express();
 
-// creating a new socket server and passing the original one in it , so socket will work like top of layer
+// creating a new socke t server and passing the original one in it , so socket will work like top of layer
 
 const server = http.createServer(app);
 const io = new Server(server,{
@@ -17,11 +17,14 @@ const io = new Server(server,{
 
 const userSocketMap={};// {userId->llsocketId} , mainting a map
 
-export const getReceiverSocketId = (receiverId) => {
+export const getReceiverSocketIdChat = (receiverId) => {
     return userSocketMap[receiverId];
-}
+} 
+export const getReceiverSocketIdGroup = (receiverId) => {
+    return userSocketMap[receiverId];
+} 
 
-
+       
 
 io.on('connection',(socket)=>{ // switching it on
     console.log('user connected',socket.id); // whenever a user comes online , will that users id in socket (variable name of arrow fucntion)
