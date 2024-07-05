@@ -5,6 +5,7 @@ import { Conversation } from "../models/conversationModel.js";
 
 export const createConvo = async (req, res) => {
     try { 
+        console.log(res.data);
         const { participants, chatName, adminId } = req.body;
   console.log("reached BE");
         let extra = "";
@@ -13,14 +14,14 @@ export const createConvo = async (req, res) => {
             return res.status(400).send("A conversation requires at least two participants.");
         }
 
-        if (adminId && chatName && chatName.trim()) { // means a grp conversation
+        if (chatName && chatName.trim()) { // means a grp conversation
             newConvo = await Conversation.create({
                 chatName: chatName,
                 participants: participants,
                 admin: adminId
             })
             extra = "group";
-        }
+        } 
         else { // one to one
             newConvo = await Conversation.create({
                 participants: participants,

@@ -10,13 +10,7 @@ export const register = async(req,res)=>{
        
         const { fullName , username , password , confirmPassword, gender}=req.body;
 
-        // console.log(req.body);
-        // console.log(fullName);
-        // console.log(username);
-        // console.log(password);
-        // console.log(confirmPassword);
-        // console.log(gender);
-
+     
         if(!fullName || !username || !password || !confirmPassword || !gender){
             return res.status(400).json({message:"Please fill all entries"}); 
         }
