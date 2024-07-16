@@ -12,16 +12,7 @@ export const sendMessage = async (req, res) => {
         // first we'll generate conversation , and then store msg
 
         let gotConversation = await Conversation.findById(conversationId);
-        //  Conversation.findOne({// we'll update this , so its not "const"
-        //     participants: { $all: [senderId, conversationId] } // it will find all converstaio with this paritcular arrya of participants
-        // })
-
-        // if (!gotConversation) {
-        //     // no prior convs. found then create new onelll
-        //     gotConversation = await Conversation.create({
-        //         participants: [senderId, receiverId]
-        //     })
-        // }
+    
 
         const newMessage = await Message.create({
             senderId,
@@ -78,6 +69,10 @@ export const getMessage = async (req, res) => {
         // we'll bring (get message) from database only those msg
         // which is in between this particular set of participants by accessing  messageids from message array of conversation
         const conversation = await Conversation.findById(conversationId).populate("messages");
+        if(!conversation){
+            console.log("no chat found")
+            return res.status(400).json();
+        }
         // populate is a method which returns messages from msg id  
         //  console.log(conversation);   
         // const msgArray=conversation.messages;  

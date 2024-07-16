@@ -4,10 +4,10 @@ import { Conversation } from "../models/conversationModel.js";
 
 
 export const createConvo = async (req, res) => {
-    try { 
+    try {
         console.log(res.data);
         const { participants, chatName, adminId } = req.body;
-  console.log("reached BE");
+        console.log("reached BE");
         let extra = "";
         let newConvo = null;
         if (!participants || participants.length < 2) {
@@ -21,7 +21,7 @@ export const createConvo = async (req, res) => {
                 admin: adminId
             })
             extra = "group";
-        } 
+        }
         else { // one to one
             newConvo = await Conversation.create({
                 participants: participants,
@@ -43,17 +43,17 @@ export const createConvo = async (req, res) => {
         return res.status(400).json(error);
     }
 };
-export const getGroups = async (req,res) => {
-  
+export const getGroups = async (req, res) => {
+
     try {
-       
+
         const user = req.id;
-    
+
         const allConversations = await Conversation.find({
             participants: user // userId should be in ObjectId format
         }).select('chatName admin participants');
 
-        
+
         const groups = allConversations.filter(convo => convo.participants.length > 2);
 
         if (!groups) {
@@ -62,31 +62,65 @@ export const getGroups = async (req,res) => {
         console.log("HII");
         return res.status(200).json({
             groups,
-            message:"working"
+            message: "working"
         });
     } catch (error) {
         return res.status(400).json("error aa gyi");
     }
 
 };
-// export const addUser = async () => {
-//     const {conversationId } = req.params.id;
-//     const {newUserId} = req.body;
+/*
+export const deleteChat = async (req, res) => {
+    const {id} = req.body;
+        console.log(id);
 
-//     if(!conversationId){
-//         return res.status(400).json("Group is not created");
-//     }
+    try {
+        const deleted = await Conversation.deleteOne({ _id: { $eq: id } });
+        if (!deleted) {
+            return res.status(200).json({
 
-//     const gotConversation=await Conversation.findById(conversationId).populate("participants");
+                message: "Not deleted"
+            });
+        }
+        return res.status(200).json({
 
-// }
-// export const removeUser = async () => {
+            message: "Deleted"
+        });
 
-// }
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json("error aa gyi");
+    }
 
-// export const exitGroup = async () => {
 
+};*/
 
+export const clearChat = async (req, res) => {
+    try {
+        const {id} = req.body;
+        console.log(id);
+        const convo=await Conversation.findOne({_id:id});
+        console.log(convo);
+        const cleared =await Conversation.updateOne(
+            { _id: { $eq: id } },
+            { $set: { messages: [] } }  
+        );
+        if (!cleared) {
+            return res.status(200).json({
+
+                message: "Not cleared"
+            });
+        }
+        return res.status(200).json({
+
+            message: "Cleared"
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json("error aa gyi");
+    }
+};
 
 
 

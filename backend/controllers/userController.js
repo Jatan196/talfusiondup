@@ -9,8 +9,7 @@ export const register = async(req,res)=>{
     try{
        
         const { fullName , username , password , confirmPassword, gender}=req.body;
-
-     
+        
         if(!fullName || !username || !password || !confirmPassword || !gender){
             return res.status(400).json({message:"Please fill all entries"}); 
         }
@@ -86,16 +85,15 @@ export const login = async(req,res)=>{
     // const token = xy ( if above jwt return xy to it)  
     console.log("sending response");
         return res.status(200).cookie("token",token,{maxAge: 1*24*60*60*1000, httpOnly:true,sameSite:'strict'}).json({
-                                                                             // this security is to protect our cookie from being stolen
+          // this security is to protect our cookie from being stolen
            message:"You Are INN!!",
-         // now returning json data as response to client side  
+          // now returning json data as response to client side  
           _id:user._id,
           username:user.username,
           fullName:user.fullName,
           profilePhoto:user.profilePhoto
-      
-       })
-    }
+        }) 
+    }       
     catch(error){ 
         console.log(error);
     }

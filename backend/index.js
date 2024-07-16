@@ -29,7 +29,8 @@ app.use("/api/v1/conversation",conversationRoute);
 // api link will form like --> 
 // http://localhost:8080/api/v1/user/register , this register will add from userRoute that we have passed
 
-// change at time of socket io
+
+// serve from socket (original server covered with socket layer)
 server.listen(PORT,()=>{
     connectDB();
     console.log(`Server listen at port ${PORT}`);
